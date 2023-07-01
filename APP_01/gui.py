@@ -8,21 +8,22 @@ sg.theme("Black")
 clock = sg.Text('', key="Clock")
 label = sg.Text("Type in a to-do")
 input_box = sg.InputText(tooltip="Enter todo", key="todo")
-add_button = sg.Button(image_source="add.png", key="Add", mouseover_colors="LightBlue",
+add_button = sg.Button(image_source="add.png", key="Add", mouseover_colors="Green",
                        tooltip="Add todo")
 
 list_box = sg.Listbox(values=functions.get_todos(), key='todos',
                       enable_events=True, size=(45, 10))
 
-edit_button = sg.Button(size=1, image_source="edit.png", key="Edit")
-complete_button = sg.Button(image_source="complete.png", key="Complete")
-exit_button = sg.Button(image_source="off.png", key='Exit')
+edit_button = sg.Button(size=1, image_source="edit.png", key="Edit", mouseover_colors="Green", tooltip="Edit todos")
+complete_button = sg.Button(image_source="complete.png", key="Complete", mouseover_colors="Green", tooltip="Check todos")
+clean_button = sg.Button(image_source="clean.png", key="Clean", mouseover_colors="Green", tooltip="Clean all todos")
+exit_button = sg.Button(image_source="off.png", mouseover_colors="Red", key='Exit')
 
 window = sg.Window("My To-Do App",
                    layout=[[clock],
                            [label],
                            [input_box, add_button],
-                           [edit_button, complete_button],
+                           [edit_button, complete_button, clean_button],
                            [list_box],
                            [exit_button]],
                    font=('Helvetica', 12))
@@ -65,6 +66,13 @@ while True:
                 window['todo'].update(value='')
             except IndexError:
                 sg.popup("Select an item first", font=("Helvetica", 12))
+
+        case "Clean":
+            todos = functions.get_todos()
+            todos.clear()
+            functions.write_todos(todos)
+            window['todos'].update(values=todos)
+
         case "todos":
             try:
                 window['todo'].update(value=values['todos'][0])
